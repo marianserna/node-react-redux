@@ -1,6 +1,6 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
+// const FacebookStrategy = require('passport-facebook').Strategy;
 const mongoose = require('mongoose');
 const keys = require('../config/keys');
 
@@ -22,56 +22,79 @@ passport.deserializeUser((id, done) => {
   });
 });
 
+// passport.use(
+//   new GoogleStrategy(
+//     {
+//       clientID: keys.googleClientID,
+//       clientSecret: keys.googleClientSecret,
+//       // route where user will be sent after they gran permission to app:
+//       callbackURL: '/auth/google/callback',
+//       proxy: true
+//     },
+//     (accessToken, refreshToken, profile, done) => {
+//       User.findOne({ googleId: profile.id }).then(existingUser => {
+//         if (existingUser) {
+//           // we've got a record with this google id. Call done and pass null (no error) and the user record
+//           done(null, existingUser);
+//         } else {
+//           // no user record. Create a new one.
+//           new User({
+//             googleId: profile.id
+//           })
+//             .save()
+//             // In this case we don't call done until we know for a fact that the user has been successfully saved to the db
+//             // user = user that was just saved (new User instance)
+//             .then(user => done(null, user));
+//         }
+//       });
+//     }
+//   )
+// );
+
+// REFACTOR TO USE ASYNC AWAIT
 passport.use(
   new GoogleStrategy(
     {
       clientID: keys.googleClientID,
       clientSecret: keys.googleClientSecret,
-      // route where user will be sent after they gran permission to app:
       callbackURL: '/auth/google/callback',
       proxy: true
     },
-    (accessToken, refreshToken, profile, done) => {
-      User.findOne({ googleId: profile.id }).then(existingUser => {
-        if (existingUser) {
-          // we've got a record with this google id. Call done and pass null (no error) and the user record
-          done(null, existingUser);
-        } else {
-          // no user record. Create a new one.
-          new User({
-            googleId: profile.id
-          })
-            .save()
-            // In this case we don't call done until we know for a fact that the user has been successfully saved to the db
-            // user = user that was just saved (new User instance)
-            .then(user => done(null, user));
-        }
-      });
+    async (accessToken, refreshToken, profile, done) => {
+      const existingUser = await User.findOne({ googleId: profile.id });
+
+      if (existingUser) {
+        return done(null, existingUser);
+      }
+
+      const user = await new User({ googleId: profile.id })
+        .save()
+        .done(null, user);
     }
   )
 );
 
-passport.use(
-  new FacebookStrategy(
-    {
-      clientID: keys.facebookClientID,
-      clientSecret: keys.facebookClientSecret,
-      callbackURL: '/auth/facebook/callback',
-      enableProof: true,
-      proxy: true
-    },
-    (accessToken, refreshToken, profile, done) => {
-      User.findOne({ facebookId: profile.id }).then(existingUser => {
-        if (existingUser) {
-          done(null, existingUser);
-        } else {
-          new User({
-            facebookId: profile.id
-          })
-            .save()
-            .then(user => done(null, user));
-        }
-      });
-    }
-  )
-);
+// passport.use(
+//   new FacebookStrategy(
+//     {
+//       clientID: keys.facebookClientID,
+//       clientSecret: keys.facebookClientSecret,
+//       callbackURL: '/auth/facebook/callback',
+//       enableProof: true,
+//       proxy: true
+//     },
+//     (accessToken, refreshToken, profile, done) => {
+//       User.findOne({ facebookId: profile.id }).then(existingUser => {
+//         if (existingUser) {
+//           done(null, existingUser);
+//         } else {
+//           new User({
+//             facebookId: profile.id
+//           })
+//             .save()
+//             .then(user => done(null, user));
+//         }
+//       });
+//     }
+//   )
+// );

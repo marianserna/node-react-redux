@@ -33,14 +33,14 @@ require('./routes/authRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 
-if (process.env.NODE_ENV === 'production') {
-  app.listen(PORT);
-} else {
-  const options = {
-    key: fs.readFileSync('/Users/marian/server.key'),
-    cert: fs.readFileSync('/Users/marian/server.crt'),
-    requestCert: false,
-    rejectUnauthorized: false
-  };
-  https.createServer(options, app).listen(PORT);
-}
+// if (process.env.NODE_ENV === 'production') {
+app.listen(PORT);
+// } else {
+//   const options = {
+//     key: fs.readFileSync('/Users/marian/server.key'),
+//     cert: fs.readFileSync('/Users/marian/server.crt'),
+//     requestCert: false,
+//     rejectUnauthorized: false
+//   };
+//   https.createServer(options, app).listen(PORT);
+// }
