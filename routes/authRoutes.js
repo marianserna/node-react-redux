@@ -10,7 +10,14 @@ module.exports = app => {
   );
 
   // -> code already exists: exchanges code for user profile
-  app.get('/auth/google/callback', passport.authenticate('google'));
+  app.get(
+    '/auth/google/callback',
+    passport.authenticate('google'),
+    // send request here after passp.auth has executed
+    (req, res) => {
+      res.redirect('/surveys');
+    }
+  );
 
   // For Facebook
   // app.get(
