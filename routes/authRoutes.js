@@ -31,7 +31,8 @@ module.exports = app => {
 
   app.get('/api/logout', (req, res) => {
     req.logout();
-    res.send(req.user);
+    // redirect to root route
+    res.redirect('/');
   });
 
   // totally making out route to test req.user and make sure user is logged in
