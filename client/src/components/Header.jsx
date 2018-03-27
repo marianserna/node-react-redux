@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 class Header extends React.Component {
@@ -27,13 +28,16 @@ class Header extends React.Component {
     return (
       <nav>
         <div className="nav-wrapper">
-          <a href="#" className="left brand-logo">
+          <Link
+            to={this.props.auth ? '/surveys' : '/'}
+            className="left brand-logo"
+          >
             <img
               src="https://cdn.iconscout.com/public/images/icon/free/png-512/react-native-logo-3b38fe0f8005ff45-512x512.png"
               alt="logo"
               style={{ width: 50, paddingTop: 8 }}
             />
-          </a>
+          </Link>
           <ul id="nav-mobile" className="right">
             {this.renderContent()}
           </ul>
