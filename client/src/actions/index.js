@@ -14,6 +14,7 @@ export const fetchUser = () => async dispatch => {
 };
 
 export const handleToken = token => async dispatch => {
+  // updated user model (includes # of credits)
   const res = await axios.post('/api/stripe', token);
 
   // reuse type bc we'll get the same data
