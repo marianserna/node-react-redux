@@ -10,6 +10,7 @@ const keys = require('./config/keys');
 
 // user must be before passport bc of order of execution
 require('./models/User');
+require('./models/Survey');
 require('./services/passport');
 
 // connect mongoose to mongodb
@@ -34,6 +35,7 @@ app.use(passport.session());
 // require statement returns a function which is immediately called with the app object
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 // for express to behave corrently in prod
 if (process.env.NODE_ENV === 'production') {
