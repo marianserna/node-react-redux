@@ -36,7 +36,7 @@ module.exports = app => {
       await survey.save();
       // subtract credits when survey has been sent
       req.user.credits -= 1;
-      const user = await req.user.save;
+      const user = await req.user.save();
       res.send(user);
     } catch (err) {
       res.status(422).send(err);
