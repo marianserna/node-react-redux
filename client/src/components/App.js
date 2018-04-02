@@ -7,6 +7,10 @@ import Header from './Header';
 import Landing from './Landing';
 import Dashboard from './Dashboard';
 
+const SurveyNew = () => {
+  return <h1>SurveyNew</h1>;
+};
+
 class App extends React.Component {
   componentDidMount() {
     // access action creator
@@ -21,7 +25,7 @@ class App extends React.Component {
             <Header />
             <Route exact path="/" component={Landing} />
             <Route exact path="/surveys" component={Dashboard} />
-            {/* <Route path="/surveys/new" component={SurveyNew} /> */}
+            <Route path="/surveys/new" component={SurveyNew} />
           </div>
         </BrowserRouter>
       </div>
