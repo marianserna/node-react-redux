@@ -1,3 +1,8 @@
+const _ = require('lodash');
+const Path = require('path-parser').default;
+// integrated in node system - used to parse URLs
+const { URL } = require('url');
+
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
@@ -12,6 +17,30 @@ module.exports = app => {
   app.get('/api/surveys/thanks', (req, res) => {
     res.send('Thanks for voting!');
   });
+
+  app.post('/api/surveys/webhooks', (req, res) => {
+    // using path parser here
+    const p = new Path('/api/surveys/:surveyId/:choice');
+
+    const events = _.chain(req.body)
+      .map(({ url, email }) => {
+        const match = p.test(new URL(url).pathname);
+
+        if (match) {
+          return {
+            email,
+            surveyId: match.surveyId,
+            choice: match.choice
+          };
+        }
+      })
+      .compact()
+      .uniqBy('email', 'surveyId')
+      .value();
+
+    console.log(events);
+  });
+
   // 1. user must be logged in
   // 2. user has enough credits to send a survey
   app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
