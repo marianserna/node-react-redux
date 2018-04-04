@@ -12,6 +12,16 @@ const Survey = mongoose.model('surveys');
 
 // Create survey and send a big email (many recipients)
 module.exports = app => {
+  app.get('/api/surveys', requireLogin, async (req, res) => {
+    // current user is available in req.user
+    //surveys created by user come from _user defined in Survey model
+    const surveys = await Survey.find({ _user: req.user.id })
+      // do not include the recipients property
+      .select({ recipients: false });
+
+    res.send(surveys);
+  });
+
   app.get('/api/surveys/:surveyId/:choice', (req, res) => {
     res.send('Thanks for voting!');
   });
